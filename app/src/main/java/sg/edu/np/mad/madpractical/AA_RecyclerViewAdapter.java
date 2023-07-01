@@ -9,6 +9,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AlertDialog;
@@ -51,7 +52,9 @@ public class AA_RecyclerViewAdapter extends RecyclerView.Adapter<AA_RecyclerView
             @Override
             public void onClick(View v) {
                 int clickedPosition = Position;
-                User userClicked = userModels.get(clickedPosition);
+                int userClickedID = (userModels.get(clickedPosition)).getID();
+                Toast.makeText(context, "id"+userClickedID, Toast.LENGTH_LONG).show();
+                User userClicked=userModels.get(clickedPosition);
 
                 AlertDialog.Builder builder = new AlertDialog.Builder(context);
                 builder.setTitle(userClicked.getMsg());
@@ -61,9 +64,7 @@ public class AA_RecyclerViewAdapter extends RecyclerView.Adapter<AA_RecyclerView
                     @Override
                     public void onClick(DialogInterface dialog, int which) {
                         Intent intent = new Intent(v.getContext(), MainActivity.class);
-                        intent.putExtra("user", userClicked);
-                        intent.putParcelableArrayListExtra("users", userModels);
-                        intent.putExtra("userpos", clickedPosition);
+                        intent.putExtra("userClickedID", userClickedID);
                         ((Activity) context).startActivityForResult(intent, 1);
                     }
                 });

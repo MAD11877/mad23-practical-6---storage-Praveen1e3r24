@@ -154,4 +154,33 @@ public class DataBaseHelper extends SQLiteOpenHelper {
         db.close();
         return rowsAffected > 0;
     }
+
+
+    public User findUser(int id) {
+        SQLiteDatabase db = this.getReadableDatabase();
+
+        String[] projection = {ID, NAME, DESCRIPTION, FOLLOWED};
+        String selection = ID + "=?";
+        String[] selectionArgs = {String.valueOf(id)};
+
+        Cursor cursor = db.query(USER_TABLE, projection, selection, selectionArgs, null, null, null);
+
+        User user = null;
+
+        if (cursor.moveToFirst()) {
+            int userID = cursor.getInt(cursor.getColumnIndexOrThrow(ID));
+            String name = cursor.getString(cursor.getColumnIndexOrThrow(NAME));
+            String description = cursor.getString(cursor.getColumnIndexOrThrow(DESCRIPTION));
+            int followed = cursor.getInt(cursor.getColumnIndexOrThrow(FOLLOWED));
+
+            boolean isFollowed = (followed == 1);
+
+            user = new User(userID, name, description, isFollowed);
+        }
+
+        cursor.close();
+        db.close();
+
+        return user;
+    }
 }

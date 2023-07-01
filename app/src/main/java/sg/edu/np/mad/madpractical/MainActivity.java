@@ -7,6 +7,7 @@ import android.os.Bundle;
 import android.view.View;
 import android.widget.Button;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import java.util.ArrayList;
 
@@ -15,35 +16,34 @@ public class MainActivity extends AppCompatActivity {
     private User currentUser;
     private int currentUserPos;
 
+    DataBaseHelper dataBaseHelper;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
-
-        allUsersList = getIntent().getParcelableArrayListExtra("users");
-        currentUser = getIntent().getParcelableExtra("user");
-        currentUserPos = getIntent().getIntExtra("userpos", -1);
-
+        dataBaseHelper = new DataBaseHelper(MainActivity.this);
+        int UserID = getIntent().getIntExtra("userClickedID", -1);
+        User user = dataBaseHelper.findUser(UserID);
+        Toast.makeText(this, "id"+user.getID(), Toast.LENGTH_SHORT).show();
         TextView textView4 = findViewById(R.id.textView4);
         TextView textView5 = findViewById(R.id.textView5);
-        textView4.setText(currentUser.getMsg());
-        textView5.setText(currentUser.getDesc());
+        textView4.setText(user.getMsg());
+        textView5.setText(user.getDesc());
 
         Button followButton = findViewById(R.id.button1);
-        followButton.setText(currentUser.isFollowed() ? "Unfollow" : "Follow");
+        followButton.setText(user.isFollowed() ? "Unfollow" : "Follow");
 
         followButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                currentUser.setFollowed(!currentUser.isFollowed());
-                followButton.setText(currentUser.isFollowed() ? "Unfollow" : "Follow");
+                user.setFollowed(!user.isFollowed());
+                followButton.setText(user.isFollowed() ? "Unfollow" : "Follow");
 
-                if (currentUserPos != -1) {
-                    allUsersList.set(currentUserPos, currentUser);
-                }
+                dataBaseHelper.updateUser(user);
 
                 Intent intent = new Intent();
-                intent.putParcelableArrayListExtra("updatedUserList", allUsersList);
+
                 setResult(RESULT_OK, intent);
             }
         });

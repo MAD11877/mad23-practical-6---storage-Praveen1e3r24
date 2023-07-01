@@ -7,6 +7,7 @@ import androidx.recyclerview.widget.RecyclerView;
 
 import android.content.Intent;
 import android.os.Bundle;
+import android.util.Log;
 
 import java.util.ArrayList;
 
@@ -37,9 +38,9 @@ public class ListActivity extends AppCompatActivity implements AA_RecyclerViewAd
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_list);
-        createUsers();
+        Log.d("hello", "onCreate:hello ");
         dataBaseHelper = new DataBaseHelper(ListActivity.this);
-
+        createUsers();
         getusers(dataBaseHelper);
 
 
@@ -47,7 +48,7 @@ public class ListActivity extends AppCompatActivity implements AA_RecyclerViewAd
     }
 
     private void getusers(DataBaseHelper dataBaseHelper) {
-
+        Log.d("hello1", "onCreate:hello1 ");
         users=this.dataBaseHelper.getUsers();
         RecyclerView recyclerView = findViewById(R.id.mRecyclerView);
         adapter=new AA_RecyclerViewAdapter(ListActivity.this,users,this);
@@ -63,7 +64,7 @@ public class ListActivity extends AppCompatActivity implements AA_RecyclerViewAd
             int randomDescInt = (int) Math.round(Math.random() * 10000);
             String msg = "User" + randomInt;
             String description = "Description" + randomDescInt;
-
+            Log.d("hello2", "onCreate:h2ello ");
             User user =new User(1,msg,description,false);
             dataBaseHelper.addOne(user);
         }
